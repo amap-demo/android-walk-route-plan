@@ -43,13 +43,13 @@
    
   ```java
    		WalkRouteQuery query = new WalkRouteQuery(fromAndTo, mode);
-			mRouteSearch.calculateWalkRouteAsyn(query);// 异步路径规划步行模式查询
+		mRouteSearch.calculateWalkRouteAsyn(query);// 异步路径规划步行模式查询
   ```
   
   - 将驾车路径规划结果用overlay在地图展现
   
   ```java
-    WalkRouteOverlay walkRouteOverlay = new WalkRouteOverlay(
+       WalkRouteOverlay walkRouteOverlay = new WalkRouteOverlay(
 				this, aMap, walkPath,
 				mWalkRouteResult.getStartPos(),
 				mWalkRouteResult.getTargetPos());
