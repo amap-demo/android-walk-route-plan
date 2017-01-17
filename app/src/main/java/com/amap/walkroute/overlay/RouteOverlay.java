@@ -115,6 +115,10 @@ public class RouteOverlay {
 		return BitmapDescriptorFactory.fromResource(R.drawable.amap_car);
 	}
 
+	protected BitmapDescriptor getRideBitmapDescriptor(){
+		return BitmapDescriptorFactory.fromResource(R.drawable.amap_ride);
+	}
+
 	protected void addStartAndEndMarker() {
 		startMarker = mAMap.addMarker((new MarkerOptions())
 				.position(startPoint).icon(getStartBitmapDescriptor())
@@ -207,6 +211,10 @@ public class RouteOverlay {
 	}
 
 	protected int getDriveColor() {
+		return Color.parseColor("#537edc");
+	}
+
+	protected int getRideColor(){
 		return Color.parseColor("#537edc");
 	}
 
