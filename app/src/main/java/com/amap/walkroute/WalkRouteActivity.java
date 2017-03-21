@@ -37,7 +37,7 @@ import com.amap.walkroute.overlay.WalkRouteOverlay;
 
 
 public class WalkRouteActivity extends Activity implements OnMapClickListener,
-		OnMarkerClickListener, OnInfoWindowClickListener, InfoWindowAdapter, OnRouteSearchListener {
+		OnMarkerClickListener, OnInfoWindowClickListener, InfoWindowAdapter, OnRouteSearchListener, AMap.OnMapLoadedListener {
 	private AMap aMap;
 	private MapView mapView;
 	private Context mContext;
@@ -60,7 +60,6 @@ public class WalkRouteActivity extends Activity implements OnMapClickListener,
 		mapView.onCreate(bundle);// 此方法必须重写
 		init();
 		setfromandtoMarker();
-		searchRouteResult(ROUTE_TYPE_WALK, RouteSearch.WalkDefault);
 	}
 
 	private void setfromandtoMarker() {
@@ -98,6 +97,7 @@ public class WalkRouteActivity extends Activity implements OnMapClickListener,
 		aMap.setOnMarkerClickListener(WalkRouteActivity.this);
 		aMap.setOnInfoWindowClickListener(WalkRouteActivity.this);
 		aMap.setInfoWindowAdapter(WalkRouteActivity.this);
+		aMap.setOnMapLoadedListener(this);
 		
 	}
 
@@ -271,6 +271,10 @@ public class WalkRouteActivity extends Activity implements OnMapClickListener,
 		// TODO Auto-generated method stub
 		
 	}
-	
+
+	@Override
+	public void onMapLoaded() {
+		searchRouteResult(ROUTE_TYPE_WALK, RouteSearch.WALK_DEFAULT);
+	}
 }
 
