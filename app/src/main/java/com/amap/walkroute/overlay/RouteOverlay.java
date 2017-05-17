@@ -36,8 +36,7 @@ public class RouteOverlay {
 	}
 
 	/**
-	 * 去掉BusRouteOverlay上所有的Marker。
-	 * @since V2.1.0
+	 * 去掉walkRouteOverlay上所有的Marker。
 	 */
 	public void removeFromMap() {
 		if (startMarker != null) {

@@ -16,10 +16,8 @@ import com.amap.api.maps.AMap.OnInfoWindowClickListener;
 import com.amap.api.maps.AMap.OnMapClickListener;
 import com.amap.api.maps.AMap.OnMarkerClickListener;
 import com.amap.api.maps.MapView;
-import com.amap.api.maps.model.BitmapDescriptorFactory;
 import com.amap.api.maps.model.LatLng;
 import com.amap.api.maps.model.Marker;
-import com.amap.api.maps.model.MarkerOptions;
 import com.amap.api.services.core.AMapException;
 import com.amap.api.services.core.LatLonPoint;
 import com.amap.api.services.route.BusRouteResult;
@@ -50,6 +48,7 @@ public class WalkRouteActivity extends Activity implements OnMapClickListener,
 	private RelativeLayout mBottomLayout, mHeadLayout;
 	private TextView mRotueTimeDes, mRouteDetailDes;
 	private ProgressDialog progDialog = null;// 搜索时进度条
+	private WalkRouteOverlay walkRouteOverlay;
 	@Override
 	protected void onCreate(Bundle bundle) {
 		super.onCreate(bundle);
@@ -59,16 +58,6 @@ public class WalkRouteActivity extends Activity implements OnMapClickListener,
 		mapView = (MapView) findViewById(R.id.route_map);
 		mapView.onCreate(bundle);// 此方法必须重写
 		init();
-		setfromandtoMarker();
-	}
-
-	private void setfromandtoMarker() {
-		aMap.addMarker(new MarkerOptions()
-		.position(AMapUtil.convertToLatLng(mStartPoint))
-		.icon(BitmapDescriptorFactory.fromResource(R.drawable.start)));
-		aMap.addMarker(new MarkerOptions()
-		.position(AMapUtil.convertToLatLng(mEndPoint))
-		.icon(BitmapDescriptorFactory.fromResource(R.drawable.end)));
 	}
 
 	/**
@@ -135,7 +124,7 @@ public class WalkRouteActivity extends Activity implements OnMapClickListener,
 	/**
 	 * 开始搜索路径规划方案
 	 */
-	public void searchRouteResult(int routeType, int mode) {
+	public void searchRouteResult(int routeType) {
 		if (mStartPoint == null) {
 			ToastUtil.show(mContext, "定位中，稍后再试...");
 			return;
@@ -147,7 +136,7 @@ public class WalkRouteActivity extends Activity implements OnMapClickListener,
 		final RouteSearch.FromAndTo fromAndTo = new RouteSearch.FromAndTo(
 				mStartPoint, mEndPoint);
 		if (routeType == ROUTE_TYPE_WALK) {// 步行路径规划
-			WalkRouteQuery query = new WalkRouteQuery(fromAndTo, mode);
+			WalkRouteQuery query = new WalkRouteQuery(fromAndTo);
 			mRouteSearch.calculateWalkRouteAsyn(query);// 异步路径规划步行模式查询
 		}
 	}
@@ -172,11 +161,13 @@ public class WalkRouteActivity extends Activity implements OnMapClickListener,
 					mWalkRouteResult = result;
 					final WalkPath walkPath = mWalkRouteResult.getPaths()
 							.get(0);
-					WalkRouteOverlay walkRouteOverlay = new WalkRouteOverlay(
+					if (walkRouteOverlay != null){
+						walkRouteOverlay.removeFromMap();
+					}
+					walkRouteOverlay = new WalkRouteOverlay(
 							this, aMap, walkPath,
 							mWalkRouteResult.getStartPos(),
 							mWalkRouteResult.getTargetPos());
-					walkRouteOverlay.removeFromMap();
 					walkRouteOverlay.addToMap();
 					walkRouteOverlay.zoomToSpan();
 					mBottomLayout.setVisibility(View.VISIBLE);
@@ -274,7 +265,7 @@ public class WalkRouteActivity extends Activity implements OnMapClickListener,
 
 	@Override
 	public void onMapLoaded() {
-		searchRouteResult(ROUTE_TYPE_WALK, RouteSearch.WALK_DEFAULT);
+		searchRouteResult(ROUTE_TYPE_WALK);
 	}
 }
 
